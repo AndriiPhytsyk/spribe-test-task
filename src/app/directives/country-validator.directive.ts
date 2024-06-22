@@ -58,9 +58,24 @@ export class CountryAutocompleteDirective implements Validator, OnInit {
 
   @HostListener('blur')
   onBlur() {
+    setTimeout(() => {
+      this.hideSuggestions();
+    }, 200);
+  }
+
+  @HostListener('focus')
+  onFocus() {
+    if (this.inputElement.value === '') {
+      this.suggestions$.next(this.countries);
+    }
+  }
+
+
+  private hideSuggestions() {
     if (this._control) {
       this.validate(this._control);
       this._control.updateValueAndValidity();
+      this.suggestions$.next([]);
     }
   }
 

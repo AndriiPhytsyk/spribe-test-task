@@ -89,6 +89,8 @@ $error-color: red;
     background-color: #fff;
     z-index: 100;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow: auto;
     padding: 0;
     li {
       padding: 10px;
