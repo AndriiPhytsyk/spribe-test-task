@@ -1,7 +1,7 @@
 import {Directive, ElementRef, HostListener, OnInit, Injector} from '@angular/core';
 import {AbstractControl, NG_VALIDATORS, Validator, ValidationErrors, NgControl, FormControl} from '@angular/forms';
 import {Country} from '../shared/enum/country';
-import {fromEvent, Observable, of} from 'rxjs';
+import {fromEvent, Observable, of, Subject} from 'rxjs';
 import {debounceTime, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/operators';
 
 @Directive({
@@ -15,7 +15,7 @@ export class CountryAutocompleteDirective implements Validator, OnInit {
   private ngControl: NgControl | null = null;
 
   countries = Object.values(Country);
-  public suggestions$: Observable<string[]> = of([]);
+  public suggestions$ = new Subject<string[]>();
   private inputElement: HTMLInputElement;
 
   constructor(private el: ElementRef, private injector: Injector) {
@@ -38,14 +38,13 @@ export class CountryAutocompleteDirective implements Validator, OnInit {
   }
 
   private setupAutocomplete() {
-    this.suggestions$ = fromEvent(this.inputElement, 'input').pipe(
+    fromEvent(this.inputElement, 'input').pipe(
       debounceTime(300),
       distinctUntilChanged(),
       map((event: Event) => (event.target as HTMLInputElement).value),
       startWith(this.inputElement.value),
       switchMap(value => this.filterCountries(value)),
-    );
-    this.suggestions$.subscribe()
+    ).subscribe(suggestions => this.suggestions$.next(suggestions));
   }
 
   private filterCountries(value: string): Observable<string[]> {

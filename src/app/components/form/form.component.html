@@ -13,7 +13,7 @@
             Choose Country from the list
           </span>
           <ul class="autocomplete" *ngIf="autocomplete.suggestions$ | async as filteredCountries">
-            <li *ngFor="let country of filteredCountries" (click)="formGroup.get('country')!.setValue(country)">
+            <li *ngFor="let country of filteredCountries" (click)="selectCountry(autocomplete.suggestions$, formGroup.get('country'), country)">
               {{ country }}
             </li>
           </ul>

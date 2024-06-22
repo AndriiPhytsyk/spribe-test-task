@@ -85,6 +85,9 @@ $error-color: red;
     list-style: none;
     cursor: pointer;
     width: 100%;
+    li:hover {
+      background-color: #eee;
+    }
   }
 
   .error {

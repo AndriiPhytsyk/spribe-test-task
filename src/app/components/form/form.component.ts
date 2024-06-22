@@ -1,6 +1,13 @@
-import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import {Component, OnInit} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  FormArray,
+  Validators,
+  ReactiveFormsModule,
+  AbstractControl,
+  FormControl
+} from '@angular/forms';
 import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
 import { UsernameValidatorDirective } from '../../directives/username-validator.directive';
 import { TimerComponent } from '../timer/timer.component';
@@ -8,6 +15,7 @@ import {CountryAutocompleteDirective} from "../../directives/country-validator.d
 import {BirthdayValidatorDirective} from "../../directives/birthday-validator.directive";
 import {TooltipDirective} from "../../directives/tooltip.directive";
 import {FormService} from "../../services/form.service";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-form',
@@ -99,4 +107,12 @@ export class FormComponent implements OnInit {
       this.timerDuration = 0;
     })
   }
+
+  selectCountry(suggestions: Subject<string[]>, formControl: AbstractControl | null, country: string) {
+    if (formControl instanceof FormControl) {
+      formControl.setValue(country);
+    }
+    suggestions.next([]);
+  }
+
 }
