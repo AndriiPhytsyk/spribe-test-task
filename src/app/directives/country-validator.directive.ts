@@ -1,7 +1,7 @@
-import {Directive, ElementRef, HostListener, OnInit, Injector} from '@angular/core';
+import {Directive, ElementRef, HostListener, OnInit, Injector, OnDestroy} from '@angular/core';
 import {AbstractControl, NG_VALIDATORS, Validator, ValidationErrors, NgControl, FormControl} from '@angular/forms';
 import {Country} from '../shared/enum/country';
-import {fromEvent, Observable, of, Subject} from 'rxjs';
+import {fromEvent, Observable, of, Subject, takeUntil} from 'rxjs';
 import {debounceTime, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/operators';
 
 @Directive({
@@ -10,13 +10,14 @@ import {debounceTime, distinctUntilChanged, map, startWith, switchMap} from 'rxj
   providers: [{provide: NG_VALIDATORS, useExisting: CountryAutocompleteDirective, multi: true}],
   standalone: true
 })
-export class CountryAutocompleteDirective implements Validator, OnInit {
+export class CountryAutocompleteDirective implements Validator, OnInit, OnDestroy {
   private _control: AbstractControl | null = null;
   private ngControl: NgControl | null = null;
-
-  countries = Object.values(Country);
   public suggestions$ = new Subject<string[]>();
+  public destroy$ = new Subject();
   private inputElement: HTMLInputElement;
+  countries = Object.values(Country);
+
 
   constructor(private el: ElementRef, private injector: Injector) {
     this.inputElement = this.el.nativeElement as HTMLInputElement;
@@ -44,6 +45,7 @@ export class CountryAutocompleteDirective implements Validator, OnInit {
       map((event: Event) => (event.target as HTMLInputElement).value),
       startWith(this.inputElement.value),
       switchMap(value => this.filterCountries(value)),
+      takeUntil(this.destroy$)
     ).subscribe(suggestions => this.suggestions$.next(suggestions));
   }
 
@@ -85,5 +87,10 @@ export class CountryAutocompleteDirective implements Validator, OnInit {
     if (this._control) {
       this._control.setValue(input.value);
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next(void 0);
+    this.destroy$.complete();
   }
 }
