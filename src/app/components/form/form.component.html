@@ -1,0 +1,44 @@
+<div class="form-container">
+  <div class="submit-container">
+    <button [appTooltip]="tooltipText" [class.cancel]="isSubmitting" class="submit-all-forms" (click)="submitAllForms()">{{isSubmitting ? 'Cancel' : 'Submit all forms'}}</button>
+    <app-timer (timerComplete)="submitForms()"  *ngIf="isSubmitting" [duration]="timerDuration" [isRunning]="isSubmitting"></app-timer>
+  </div>
+  <div class="form-cards">
+    <div *ngFor="let formGroup of formGroups; let i = index" class="form-card">
+      <form [formGroup]="formGroup">
+        <div class="form-group">
+          <label for="country-{{i}}">Country</label>
+          <input id="country-{{i}}" formControlName="country" #autocomplete="appCountryAutocomplete" appCountryAutocomplete placeholder="Country"/>
+          <span class="error" *ngIf="formGroup.get('country')?.hasError('invalidCountry') && formGroup.get('country')?.touched">
+            Choose Country from the list
+          </span>
+          <ul class="autocomplete" *ngIf="autocomplete.suggestions$ | async as filteredCountries">
+            <li *ngFor="let country of filteredCountries" (click)="formGroup.get('country')!.setValue(country)">
+              {{ country }}
+            </li>
+          </ul>
+        </div>
+        <div class="form-group">
+          <label for="username-{{i}}">Username</label>
+          <input id="username-{{i}}" formControlName="username" appUsernameValidator placeholder="Username"/>
+          <span class="error" *ngIf="formGroup.get('username')?.touched">
+            <span *ngIf="formGroup.get('username')?.hasError('required')">Username is required</span>
+            <span  *ngIf="formGroup.get('username')?.hasError('isNotAvailable')">Username is not available</span>
+          </span>
+        </div>
+        <div class="form-group">
+          <label for="birthday-{{i}}">Birthday</label>
+          <input id="birthday-{{i}}" formControlName="birthday" type="date" placeholder="dd.mm.yyyy" appBirthdayValidator />
+          <span class="error" *ngIf="formGroup.get('birthday')?.touched">
+            <span *ngIf="formGroup.get('birthday')?.hasError('invalidBirthday')">Birthday cannot be later than today</span>
+            <span *ngIf="formGroup.get('birthday')?.hasError('required')">Birthday is required</span>
+
+          </span>
+        </div>
+      </form>
+    </div>
+    <div class="add-form-card" (click)="addForm()">
+      <div class="add-form-icon">&plus;</div>
+    </div>
+  </div>
+</div>

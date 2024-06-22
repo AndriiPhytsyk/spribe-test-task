@@ -1,0 +1,133 @@
+$form-border-color: #ddd;
+$form-background-color: #fff;
+$button-background-color: #007bff;
+$button-border-color: #6c757d ;
+$button-color: #fff;
+$button-hover-background-color: darken($button-background-color, 10%);
+$cancel-button-background-color: #d9534f;
+$cancel-button-hover-background-color: darken($cancel-button-background-color, 10%);
+$add-form-background-color:  lighten(#6c757d, 50%);
+$add-form-hover-background-color: lighten(#6c757d, 45%);
+$error-color: red;
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px;
+  width: 100%;
+}
+
+.submit-container {
+  display: flex;
+  .submit-all-forms {
+    align-self: flex-end;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background-color: $button-background-color;
+    color: $button-color;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &.cancel {
+      background-color: $cancel-button-background-color;
+
+      &:hover {
+        background-color: $cancel-button-hover-background-color;
+      }
+    }
+
+    &:hover {
+      background-color: $button-hover-background-color;
+    }
+  }
+}
+
+
+.form-cards {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.form-card {
+  border: 1px solid $form-border-color;
+  padding: 16px;
+  border-radius: 4px;
+  background-color: $form-background-color;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex: 1 1 calc(25% - 16px);
+  box-sizing: border-box;
+  max-width: calc(25% - 16px);
+}
+
+.form-group {
+  margin-bottom: 16px;
+  position: relative;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid $form-border-color;
+    border-radius: 4px;
+  }
+
+  .autocomplete {
+    list-style: none;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  .error {
+    color: $error-color;
+    font-size: 12px;
+  }
+}
+
+.add-form-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: $add-form-background-color;
+  flex: 1 1 calc(25% - 16px);
+  border: 2px dashed $button-border-color;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  max-width: calc(25% - 16px);
+
+  &:hover {
+    background-color: $add-form-hover-background-color;
+  }
+
+  .add-form-icon {
+    font-size: 32px;
+    font-weight: 700;
+    color: $button-background-color;
+    width: 50px;
+    height: 50px;
+    border: 1px dashed $button-background-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    line-height: 1;
+    padding: 35px;
+  }
+}
+
+.timer {
+  margin-left: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #6c757d; // Adjust the color to match the design
+}
